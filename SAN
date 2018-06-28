@@ -1,0 +1,36 @@
+Include SAN into certificate.
+
+1. Edit profile and add below line. In this case /usr/share/pki/ca/conf/serverCert.profile.
+
+policyset.<profile>.<number>.constraint.class_id=noConstraintImpl
+policyset.<profile>.<number>.constraint.name=No Constraint
+policyset.<profile>.<number>.constraint.subjAltNameExtCritical=false
+policyset.<profile>.<number>.default.class_id=userExtensionDefaultImpl
+policyset.<profile>.<number>.default.name=User Supplied Extension Default
+policyset.<profile>.<number>.default.params.userExtOID=2.5.29.17
+
+2. Restart pki-tomcatd.target
+
+3. CSR.conf
+
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = MY
+ST = Selangor
+L = Sepang
+O = Red Hat
+OU = Consulting
+CN = ocpmaster01.xxx.net
+[v3_req]
+basicConstraints = CA:FALSE
+keyUsage = keyEncipherment, dataEncipherment,digitalSignature
+extendedKeyUsage = serverAuth, 1.3.6.1.5.5.8.2.2
+subjectAltName = @alt_name
+[alt_name]
+DNS.1=ocpmaster.xxx.net
+DNS.2=ocpmaster-int.xxx.net
+
+openssl req -out master.csr -newkey rsa:2048 -nodes -keyout master.key -config master.conf
