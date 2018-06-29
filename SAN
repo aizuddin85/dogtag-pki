@@ -1,4 +1,4 @@
-Include SAN into certificate.
+How to include SAN into certificate.
 
 1. Edit profile and add below line. In this case /usr/share/pki/ca/conf/serverCert.profile.
 
@@ -11,7 +11,7 @@ policyset.<profile>.<number>.default.params.userExtOID=2.5.29.17
 
 2. Restart pki-tomcatd.target
 
-3. CSR.conf
+3. Create CSR.conf
 
 [req]
 distinguished_name = req_distinguished_name
@@ -33,4 +33,6 @@ subjectAltName = @alt_name
 DNS.1=ocpmaster.xxx.net
 DNS.2=ocpmaster-int.xxx.net
 
+
+4. Create a CSR and submit to RHCS.
 openssl req -out master.csr -newkey rsa:2048 -nodes -keyout master.key -config master.conf
